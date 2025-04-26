@@ -80,7 +80,7 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          {filteredAdvocates.map((advocate) => {
+          {filteredAdvocates.map((advocate: Advocate) => {
             return (
               <tr key={advocate.id}>
                 <td>{advocate.firstName}</td>
@@ -88,7 +88,7 @@ export default function Home() {
                 <td>{advocate.city}</td>
                 <td>{advocate.degree}</td>
                 <td>
-                  {advocate.specialties.map((s, i) => (
+                  {advocate.specialties.map((s: string, i: number) => (
                     <div key={i}>{s}</div>
                   ))}
                 </td>

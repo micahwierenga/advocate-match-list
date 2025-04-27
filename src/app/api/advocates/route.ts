@@ -1,10 +1,11 @@
 import { or, ilike, eq, sql } from 'drizzle-orm';
+import { NextRequest } from "next/server";
 import db from "../../../db";
 import { advocates } from "../../../db/schema";
-import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchTerm = request.nextUrl.searchParams.get('search');
+
   let filters = undefined;
   if (searchTerm) {
     filters = or(
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
       parseInt(searchTerm) ? eq(advocates.yearsOfExperience, searchTerm) : undefined,
     );
   }
+
   const data = await db
     .select()
     .from(advocates)

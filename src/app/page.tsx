@@ -1,6 +1,12 @@
 "use client";
 
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  MouseEventHandler,
+  useEffect,
+  useState
+} from "react";
 
 interface Advocate {
   id: number;
@@ -15,7 +21,7 @@ interface Advocate {
 }
 
 export default function Home() {
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState([]);
 
   useEffect(() => {
     fetchAdvocates('');
@@ -25,14 +31,14 @@ export default function Home() {
     const response = await fetch(`/api/advocates?search=${searchTerm}`);
     const jsonResponse = await response.json();
 
-    setFilteredAdvocates(jsonResponse.data);
+    setAdvocates(jsonResponse.data);
   }
 
   const onChange: ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     fetchAdvocates(e.target.value);
   };
 
-  const onClick = () => {
+  const onClick: MouseEventHandler = () => {
     fetchAdvocates('');
   };
 
@@ -64,7 +70,7 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          {filteredAdvocates.map((advocate: Advocate) => {
+          {advocates.map((advocate: Advocate) => {
             return (
               <tr key={advocate.id}>
                 <td>{advocate.firstName}</td>

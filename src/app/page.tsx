@@ -7,6 +7,11 @@ import {
   useEffect,
   useState
 } from "react";
+import { Lato } from "next/font/google";
+
+const lato400 = Lato({ subsets: ["latin"], weight: "400" });
+const lato700 = Lato({ subsets: ["latin"], weight: "700" });
+const lato900 = Lato({ subsets: ["latin"], weight: "900" });
 
 interface Advocate {
   id: number;
@@ -22,9 +27,10 @@ interface Advocate {
 
 export default function Home() {
   const [advocates, setAdvocates] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetchAdvocates('');
+    fetchAdvocates("");
   }, []);
 
   const fetchAdvocates = async (searchTerm: string) => {
@@ -35,55 +41,51 @@ export default function Home() {
   }
 
   const onChange: ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
     fetchAdvocates(e.target.value);
   };
 
   const onClick: MouseEventHandler = () => {
-    fetchAdvocates('');
+    setSearchTerm("");
+    fetchAdvocates("");
   };
 
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+    <main className={`m-2 text-xs lg:text-md lg:m-8 ${lato400.className}`}>
+      <h1 className={`mb-8 ${lato900.className} text-2xl`}>Solace Advocates</h1>
+      <div className="flex mb-8">
+        <input value={searchTerm} placeholder="Search..." className="mr-4 p-2.5 w-full bg-gray-50 border border-black text-gray-900 text-sm rounded-lg focus:border-[#d7a13b]" onChange={onChange} />
+        <a className="flex flex-col items-center justify-center px-8 py-1 cursor-pointer rounded-md bg-[#d7a13b] text-center" onClick={onClick}>Clear</a>
       </div>
-      <br />
-      <br />
-      <table>
-        <thead>
+      <table className="table-auto w-full bg-white border border-gray-500">
+        <thead className={`bg-[#265b4e] ${lato700.className} text-white`}>
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
+            <th className="border border-gray-300 px-4 py-2">First Name</th>
+            <th className="border border-gray-300 px-4 py-2">Last Name</th>
+            <th className="border border-gray-300 px-4 py-2">City</th>
+            <th className="border border-gray-300 px-4 py-2">Degree</th>
+            <th className="border border-gray-300 px-4 py-2">Specialties</th>
+            <th className="border border-gray-300 px-4 py-2">Years of Experience</th>
+            <th className="border border-gray-300 px-4 py-2">Phone Number</th>
           </tr>
         </thead>
         <tbody>
           {advocates.map((advocate: Advocate) => {
             return (
               <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s: string, i: number) => (
-                    <div key={i}>{s}</div>
-                  ))}
+                <td className="border border-gray-300 px-4 py-2">{advocate.firstName}</td>
+                <td className="border border-gray-300 px-4 py-2">{advocate.lastName}</td>
+                <td className="border border-gray-300 px-4 py-2">{advocate.city}</td>
+                <td className="border border-gray-300 px-4 py-2">{advocate.degree}</td>
+                <td className="border border-gray-300 px-6 py-2">
+                  <ul>
+                    {advocate.specialties.map((s: string, i: number) => (
+                      <li key={i} className="list-disc">{s}</li>
+                    ))}
+                  </ul>
                 </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
+                <td className="border border-gray-300 px-4 py-2">{advocate.yearsOfExperience}</td>
+                <td className="border border-gray-300 px-4 py-2">{advocate.phoneNumber}</td>
               </tr>
             );
           })}

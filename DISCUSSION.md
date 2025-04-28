@@ -15,4 +15,7 @@ As often as I can, I prefer to use `main` as the base branch. Otherwise, I'll us
 
 # Future Improvements
 
-TBD
+- Possible normalized tables for `cities`, `degrees`, and `specialties`.
+- Possibly optimize query to avoid `ilike`, especially when considering scalability.
+- Apply search term validation (e.g., disallow special characters).
+- Add error handling.

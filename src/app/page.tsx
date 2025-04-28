@@ -1,6 +1,12 @@
 "use client";
 
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  MouseEventHandler,
+  useEffect,
+  useState
+} from "react";
 
 interface Advocate {
   id: number;
@@ -16,40 +22,24 @@ interface Advocate {
 
 export default function Home() {
   const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+    fetchAdvocates('');
   }, []);
 
+  const fetchAdvocates = async (searchTerm: string) => {
+    const response = await fetch(`/api/advocates?search=${searchTerm}`);
+    const jsonResponse = await response.json();
+
+    setAdvocates(jsonResponse.data);
+  }
+
   const onChange: ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate: Advocate) => {
-      return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience == parseInt(searchTerm)
-      );
-    });
-
-    setFilteredAdvocates(filteredAdvocates);
+    fetchAdvocates(e.target.value);
   };
 
-  const onClick = () => {
-    console.log(advocates);
-    setFilteredAdvocates(advocates);
+  const onClick: MouseEventHandler = () => {
+    fetchAdvocates('');
   };
 
   return (
@@ -80,7 +70,7 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          {filteredAdvocates.map((advocate: Advocate) => {
+          {advocates.map((advocate: Advocate) => {
             return (
               <tr key={advocate.id}>
                 <td>{advocate.firstName}</td>
